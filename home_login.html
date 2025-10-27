@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+
+    <title>HOMEPAGE</title>
+	<!---CSS--->
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+	<!--<?php 
+		include("session.php");
+	?>-->
+	<!--------NAVIGATION BAR-------->	
+	<nav>
+		<div class="home">
+			<div class="log">
+				<a href="home_login.html">HOME</a>
+				<img src="./images/home.png" alt="" />
+			</div>
+			<div class="add">
+				<a href="add.html">ADD DATA</a>
+				<img src="./images/add.png" alt="" />
+			</div>
+			<div class="calib">
+				<a href="register.html">REGISTER</a>
+				<img src="./images/user.png" alt="" />
+			</div>
+			<!--<div class="regcal">
+				<a href="register.php">REGISTER</a>
+				<img src="./images/register.png" alt="" />
+			</div>-->		
+		</div>
+		
+		<div class="reg2">
+			<!--<h2>Hi <?php echo $login_session; ?> !</h2>-->
+				<!--<a href="register.html">REGISTER</a>-->
+			<button class="login">LOGIN</button>
+		</div>
+	</nav>
+	
+	<!--------MAIN BODY (DETAILS SUMMARY)-------->
+	<!--<?php
+		include("connection.php");
+		
+		$cal	 = 0;
+		$onCal   = 0;	
+		$forCal  = 0;
+		
+		If ($con) {
+		
+		$res = mysqli_query($con, "SELECT * FROM testcal_data");
+		
+			while($row = mysqli_fetch_array($res))
+			{
+				$Status = strtoupper($row['Status']);
+				$ActualFloor = strtoupper($row['Floor']);
+				
+				if ($Status == "FOR CALIBRATION") {
+					$forCal++;
+				}			
+				else if ($Status == "ONGOING CALIBRATION") {
+					$onCal++;
+				}
+				else if ($Status == "CALIBRATED") {
+					$cal++;
+				}		
+			}
+	?>-->
+	
+	<div class="main-container">
+		<div class="boxes">	
+			<div class="status">
+				<div class="status_inner"><h2>FOR CALIBRATION</h2></div>
+				<h1 style="color:#660000">1</h1>				
+			</div>	
+			
+			<div class="status">
+				<div class="status_inner"><h2>ONGOING CALIBRATION</h2></div>
+				<h1 style="color:#804A00">1</h1>				
+			</div>
+			
+			<div class="status">
+				<div class="status_inner"><h2>CALIBRATED</h2></div>	
+				<h1 style="color:#056608">2</h1>
+			</div>
+					
+			<div class="status">
+				<div class="status_inner"><h2>TOTAL</h2></div>	
+				<h1 style="color:#000080">4</h1>				
+			</div>		
+		</div>
+	</div>
+	
+	<!--------TABLE TOP-------->
+	<div class="table-top">
+		<table class="table-top-main">
+			<thead>
+				<tr>				
+					<th style="background-color:#4682B4; letter-spacing:1px">PROCESS</th>
+					<th style="background-color:#4682B4; letter-spacing:1px">FOR CALIBRATION</th>
+					<th style="background-color:#4682B4; letter-spacing:1px">ONGOING CALIBRATION</th>
+					<th style="background-color:#4682B4; letter-spacing:1px">CALIBRATED</th>
+					<th style="background-color:#4682B4; letter-spacing:1px">TOTAL</th>
+				</tr>
+			</thead>
+			<tbody>
+			<!--<?php 
+				//Get all actual floor value without duplicate
+				$process = mysqli_query($con, "SELECT DISTINCT Floor FROM testcal_data ORDER BY Floor ASC");				
+				while($row = mysqli_fetch_array($process))
+				{
+					$ActualFloor = strtoupper($row['Floor']);
+
+					$floorArr[]  = $ActualFloor;			
+				}
+			
+				$floorImp = implode(",", $floorArr); //Convert array to string		
+				$floorExp = explode(",", $floorImp); //Split array into string
+						
+				//Loop all actual floor data
+				for ($x = 0; $x < count($floorExp); $x++)
+				{
+					$valFC = 0;
+					$valOnC = 0;
+					$valC = 0;
+					
+					$valForCal = mysqli_query($con, "SELECT * FROM testcal_data WHERE Status='FOR CALIBRATION' AND Floor='$floorExp[$x]'");	//Find match with Actual Floor AND 'For Calibration'
+					$valOnCal  = mysqli_query($con, "SELECT * FROM testcal_data WHERE Status='ONGOING CALIBRATION' AND Floor='$floorExp[$x]'");	//Find match with Actual Floor AND 'Ongoing Calibration'
+					$valCal  = mysqli_query($con, "SELECT * FROM testcal_data WHERE Status='CALIBRATED' AND Floor='$floorExp[$x]'"); //Find match with Actual Floor AND 'Calibrated'
+					
+					while($row = mysqli_fetch_array($valForCal)) {						
+						$valFC++;
+					}
+					
+					while($row = mysqli_fetch_array($valOnCal)) {						
+						$valOnC++;
+					}
+					
+					while($row = mysqli_fetch_array($valCal)) {						
+						$valC++;
+					}
+					
+					//Store array values
+					$arrForCal[] = $valFC;
+					$arrOnCal[]  = $valOnC;
+					$arrCal[]    = $valC;
+					$arrTotal[]  = $valFC + $valOnC + $valC;
+				}
+				
+				$arrForCalImp = implode(",", $arrForCal);
+				$arrForCalExp = explode(",", $arrForCalImp);
+				
+				$arrOnCalImp = implode(",", $arrOnCal);
+				$arrOnCalExp = explode(",", $arrOnCalImp);
+				
+				$arrCalImp = implode(",", $arrCal);
+				$arrCalExp = explode(",", $arrCalImp);
+				
+				$arrTotalImp = implode(",", $arrTotal);
+				$arrTotalExp = explode(",", $arrTotalImp);
+				
+				//Add all data values into the table
+				for ($i = 0; $i < count($floorExp); $i++)
+				{
+					echo "<tr>
+							<td>$floorExp[$i]</td>
+							<td>$arrForCalExp[$i]</td>
+							<td>$arrOnCalExp[$i]</td>
+							<td>$arrCalExp[$i]</td>	
+							<td>$arrTotalExp[$i]</td>
+						 </tr>";					
+				}				
+			?>-->
+				<tr>
+					<td>LSI2-1F</td>
+					<td>0</td>
+					<td>0</td>
+					<td>2</td>	
+					<td>2</td>
+				</tr>
+				<tr>
+					<td>LSI2-3F</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>	
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>LSI3-4F</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>	
+					<td>1</td>
+				</tr>	
+			</tbody>		
+		</table>	
+	</div>
+	
+	<!--------TABLE SECONDARY (LOWER)-------->
+	<div class="table-lower">
+		<div class="table-nav">		
+			<div class="main-container1">
+					<p>PROCESS</p>
+					<div class="dropdown2" style="min-width:8em">
+						<div class="select2">
+							<span class="selected2">ALL</span>
+							<div class="caret2"></div>
+						</div>
+						<ul class="menu2">
+							<li class="active">ALL</li>								
+							<!--<?php 
+								$resFloor = mysqli_query($con, "SELECT DISTINCT Floor FROM testcal_data ORDER BY Floor ASC");	
+								while($row = mysqli_fetch_array($resFloor))
+								{
+									$ActualFloor = strtoupper($row['Floor']);																		
+									echo "<li>$ActualFloor</li>";								
+								}
+							?>-->
+							<li>LSI2-1F</li>
+							<li>LSI2-3F</li>
+							<li>LSI3-4F</li>	
+						</ul>
+					</div>
+					
+					<p>TESTER TYPE</p>
+					<div class="dropdown2" style="min-width:8em">
+						<div class="select2">
+							<span class="selected2">ALL</span>
+							<div class="caret2"></div>
+						</div>
+						<ul class="menu2">
+							<li class="active">ALL</li>
+							<!--<?php 
+								$resTester = mysqli_query($con, "SELECT DISTINCT Tester FROM testcal_data ORDER BY Tester ASC");
+								while($row = mysqli_fetch_array($resTester))
+								{
+									$Tester = strtoupper($row['Tester']);									
+									echo "<li>$Tester</li>";
+								}
+							?>-->
+							<li>ICT2000</li>
+							<li>RSX5000</li>
+							<li>DIAMONDX</li>						
+						</ul>
+					</div>
+					
+					<p>STATUS</p>
+					<div class="dropdown2" style="min-width:12em;">
+						<div class="select2">
+							<span class="selected2">ALL</span>
+							<div class="caret2"></div>
+						</div>
+						<ul class="menu2">
+							<li class="active">ALL</li>
+							<li>CALIBRATED</li>
+							<li>ONGOING CALIBRATION</li>
+							<li>FOR CALIBRATION</li>
+						</ul>
+					</div>
+			</div>
+
+			<div class="main-container2">
+				<div class="search">
+					<div class="search-btn">
+						<input type="text" class="search-data" id="search-data" placeholder="Search">
+						<img src="./images/search.png" alt="" />
+					</div>
+					<div class="btn-aec">
+						<form action="export.php" method="post">
+							<button type="submit" name="export" class="export">EXPORT</button>
+						</form>
+					</div>
+				</div>
+			</div>				
+		</div>
+				
+		<div class="table-lower-data2" id="table-lower-data2">
+			<table class="table-lower-main" id="table-lower-main">
+				<thead>
+					<tr>
+						<th>STATUS</th>
+						<th>REGISTRATION NO</th>
+						<th>SERIAL NO</th>
+						<th>INSTRUMENT NAME</th>
+						<th>TYPE</th>
+						<th>MANUFACTURER</th>
+						<th>CALIBRATOR</th>
+						<th>ACTUAL FLOOR</th>
+						<th>REQUESTING PERSON</th>
+						<th>REQUESTING DEPT</th>
+						<th>CALIBRATION DATE</th>			
+						<th>ACTION</th>
+					</tr>
+				</thead>
+				<tbody>
+				<!--<?php 	
+					$MonthTotal = 0;
+					$DayTotal = 0;
+					$YearTotal = 0;					
+					
+					$resTable = mysqli_query($con, "SELECT * FROM testcal_data ORDER BY RegNo DESC");				
+					while($row = mysqli_fetch_array($resTable))
+					{
+						$Status		  = strtoupper($row['Status']);
+						$RegNo     	  = strtoupper($row['RegNo']);						
+						$SerialNo     = strtoupper($row['SerialNo']);
+						$InstruName   = strtoupper($row['InstruName']);
+						$Tester	   	  = strtoupper($row['Tester']);
+						$Manufacturer = strtoupper($row['Manufacturer']);
+						$Calibrator   = strtoupper($row['Calibrator']);
+						$ActualFloor  = strtoupper($row['Floor']);
+						$ReqPerson    = strtoupper($row['ReqPerson']);
+						$ReqDept	  = strtoupper($row['ReqDept']);
+						$CalDate	  = date('m/d/Y', strtotime($row['Date']));
+						$CalDate2	  = $row['Date'];						
+						$Files     	  = $row['Files'];	
+						$currentDate  = date('m/d/Y');
+						
+						$calibDate = date_create($CalDate); //Create Calibration Date
+						$today     = date_create($currentDate);	//Create date today									
+						$dateDiff  = date_diff($calibDate, $today); //Calibration Date - Date today
+						
+						//Number of days interval
+						$finalDate = $dateDiff->format("%R%a");
+						
+						if ($finalDate > -3 AND $Status != "ONGOING CALIBRATION") {	
+							$update = mysqli_query($con, "UPDATE testcal_data SET Status='FOR CALIBRATION' WHERE RegNo='$RegNo'");							
+						}						
+										
+						echo "<tr>	
+								<td>$Status</td>									
+								<td>$RegNo</td>
+								<td>$SerialNo</td>
+								<td>$InstruName</td>
+								<td>$Tester</td>
+								<td>$Manufacturer</td>
+								<td>$Calibrator</td>
+								<td>$ActualFloor</td>
+								<td>$ReqPerson</td>
+								<td>$ReqDept</td>					
+								<td>$CalDate</td>
+								<td>
+									<button title='DETAILS' onclick=\"location.href='view_login.php?serial=$SerialNo&reg=$RegNo&instru=$InstruName&test=$Tester&manu=$Manufacturer&cal=$Calibrator&floor=$ActualFloor&reqp=$ReqPerson&reqd=$ReqDept&date=$CalDate&fil=$Files'\"><img src='./images/view.png' alt='' /></button>
+									<button title='UPDATE' onclick=\"location.href='update.php?serial=$SerialNo&reg=$RegNo&instru=$InstruName&test=$Tester&manu=$Manufacturer&cal=$Calibrator&floor=$ActualFloor&reqp=$ReqPerson&reqd=$ReqDept&date=$CalDate&date2=$CalDate2&fil=$Files&stat=$Status'\"><img src='./images/edit.png' alt='' /></button>
+									<button title='DELETE' onclick=\"location.href='delete.php?serial=$SerialNo&reg=$RegNo&instru=$InstruName&test=$Tester&manu=$Manufacturer&cal=$Calibrator&floor=$ActualFloor&reqp=$ReqPerson&reqd=$ReqDept&date=$CalDate&fil=$Files'\"><img src='./images/delete.png' alt='' /></button>
+								</td>                        
+							</tr>";	
+					}
+					}
+					else {
+						die("Connection Failed:" . mysqli_connect_error());
+					}
+
+					mysqli_close($con);
+				?>-->
+						<td>CALIBRATED</td>									
+						<td>RNEU-02T-1473</td>
+						<td>170TSX</td>
+						<td>FT TESTER</td>
+						<td>ICT2000</td>
+						<td>ROHM</td>
+						<td>CALIBRATOR1</td>
+						<td>LSI2-1F</td>
+						<td>PERSON1</td>
+						<td>DEPARTMENT1</td>					
+						<td>01/01/2024</td>
+						<td>
+							<button title='DETAILS'><img src='./images/view.png' alt='' /></button>
+							<button title='UPDATE'><img src='./images/edit.png' alt='' /></button>
+							<button title='DELETE'><img src='./images/delete.png' alt='' /></button>
+						</td>                        
+					</tr>	
+					<tr>	
+						<td>ONGOING CALIBRATION</td>									
+						<td>RNEU-02T-1693</td>
+						<td>412TSX</td>
+						<td>FT TESTER</td>
+						<td>RSX5000</td>
+						<td>ROHM</td>
+						<td>CALIBRATOR2</td>
+						<td>LSI2-3F</td>
+						<td>PERSON2</td>
+						<td>DEPARTMENT2</td>					
+						<td>02/02/2025</td>
+						<td>
+							<button title='DETAILS'><img src='./images/view.png' alt='' /></button>
+							<button title='UPDATE'><img src='./images/edit.png' alt='' /></button>
+							<button title='DELETE'><img src='./images/delete.png' alt='' /></button>
+						</td>                        
+					</tr>
+					<tr>	
+						<td>FOR CALIBRATION</td>									
+						<td>RNEU-02T-1295</td>
+						<td>038TSX</td>
+						<td>FT TESTER</td>
+						<td>DIAMONDX</td>
+						<td>SPANDNIX</td>
+						<td>CALIBRATOR3</td>
+						<td>LSI3-4F</td>
+						<td>PERSON3</td>
+						<td>DEPARTMENT3</td>					
+						<td>03/03/2025</td>
+						<td>
+							<button title='DETAILS'><img src='./images/view.png' alt='' /></button>
+							<button title='UPDATE'><img src='./images/edit.png' alt='' /></button>
+							<button title='DELETE'><img src='./images/delete.png' alt='' /></button>
+						</td>                        
+					</tr>
+					<tr>	
+						<td>CALIBRATED</td>									
+						<td>RNEU-02T-1211</td>
+						<td>444TSX</td>
+						<td>FT TESTER</td>
+						<td>RSX5000</td>
+						<td>SPANDNIX</td>
+						<td>CALIBRATOR4</td>
+						<td>LSI2-1F</td>
+						<td>PERSON4</td>
+						<td>DEPARTMENT4</td>					
+						<td>04/04/2025</td>
+						<td>
+							<button title='DETAILS'><img src='./images/view.png' alt='' /></button>
+							<button title='UPDATE'><img src='./images/edit.png' alt='' /></button>
+							<button title='DELETE'><img src='./images/delete.png' alt='' /></button>
+						</td>                        
+					</tr>
+				</tbody>
+			</table>
+		</div>		
+	</div>
+
+	<script type="text/javascript" src="home2.js"></script>
+	<script type="text/javascript" src="resetpage2.js"></script>
+</body>   
+		<h1 id="notfound">NO RECORD FOUND</h1> 
+</html>

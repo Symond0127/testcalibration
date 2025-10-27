@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+
+    <title>ADD NEW</title>
+	<!---CSS--->
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+	<!--------NAVIGATION BAR-------->
+	<!--<?php 
+		include("session.php");
+	?>-->
+	<nav>
+		<div class="home">
+			<div class="log">
+				<a href="home_login.html">HOME</a>
+				<img src="./images/home.png" alt="" />
+			</div>
+			<div class="add">
+				<a href="add.html">ADD DATA</a>
+				<img src="./images/add.png" alt="" />
+			</div>
+			<div class="calib">
+				<a href="register.html">REGISTER</a>
+				<img src="./images/user.png" alt="" />
+			</div>
+			<!--<div class="regcal">
+				<a href="register.html">REGISTER</a>
+				<img src="./images/register.png" alt="" />
+			</div>-->			
+		</div>
+
+		<div class="reg2">
+			<!--<h2>Hi <?php echo $login_session; ?> !</h2>-->
+				<!--<a href="register.html">REGISTER</a>-->
+			<button class="login">LOGIN</button>
+		</div>
+	</nav>
+	
+	<!--------ADD DETAILS FORM-------->
+	<div class="add-container">
+		<div class="add-header">ADD DETAILS</div>
+
+		<form action="" method="post" enctype="multipart/form-data" id="uploadForm">
+			<table class="add-table">
+				<tr>
+					<td><p>TESTER SERIAL NO</p><input type="text" name="serial" id="serial"	required></td>
+					<td><p>INSTRUMENT NAME</p><input type="text" name="instru" placeholder="Ex.(FT TESTER)" required></td>
+				</tr>
+				<tr>
+					<td><p>TESTER TYPE</p><input type="text" name="tester" placeholder="Ex.(ICT2000,ICT8000,RSX5000,DIAMONDX)" required></td>
+					<td><p>ACTUAL FLOOR</p><input type="text" name="floor" placeholder="Ex.(LSI2-1F,LSI2-2F,LSI3-EDS)" required></td>
+				</tr>
+				<tr>
+					<td><p>CALIBRATOR</p><input type="text" name="calib" required></td>
+					<td><p>MANUFACTURER</p><input type="text" name="manu" required></td>
+				</tr>
+				<tr>
+					<td><p>REQUESTING PERSON</p><input type="text" name="reqp" required></td>
+					<td><p>REQUESTING DEPT</p><input type="text" name="reqd" required></td>
+				</tr>
+				<tr>
+					<td><p>CALIBRATION DATE</p><input type="date" name="date" style="padding:7px" required></td>
+					<td><p>ATTACH FILE/S</p><input type="file" id="files" name="files[]" multiple required></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p style="margin-top:3px; font-size:10px; display:none; max-width:290px" id="fname">FILES</p></td>
+				</tr>
+			</table>
+	
+			<div class="save" id="save">
+				<button type="submit" name="submit" id="save-btn">SUBMIT</button>
+			</div>
+			<div class="savedAlarm">			
+				<div class="savedMsg" id="savedMsg"><p>SAVED</p></div>
+				<div class="savedMsg" id="imgAdd"><img src="./images/check.png" alt="" /></div>	
+			</div>
+		</form>
+	</div>
+		<script type="text/javascript" src="home.js"></script>
+</body>
+
+<!-----INSERT DATA IN MYSQL USING PHP----->
+<!--<?php 
+	//Check if mysqli database was connected
+	include("connection.php");
+	
+	   echo "<script> var filex = document.getElementById('files'); 
+					  var fname = document.getElementById('fname'); 
+
+				   filex.addEventListener('input', () =>
+				   {
+					   let selectedFiles = filex.files;
+					   let myArray = [];
+				   
+					   if (selectedFiles.length > 0)
+					   {
+						   for (let i = 0; i < selectedFiles.length; i++)
+						   {
+							   myArray.push(filex.files[i].name);
+						   }					   
+					   }
+											   
+					   if (selectedFiles.length > 1)
+					   {
+						   var combined = myArray.join(',');
+						   fname.innerHTML = combined;
+						   fname.style.color = 'white';
+						   fname.style.fontSize = '10px';
+						   fname.style.display = 'block';
+					   }
+					   else
+					   {
+						   fname.innerHTML = '';
+					   }
+				   });	
+			</script>";
+	
+	$time = date("H:i:s");
+	
+	//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	if(isset($_POST['submit'])) {	
+				   
+		//Select all data from database sorted by REG No
+		$select = mysqli_query($con, "SELECT * FROM testcal_data ORDER BY RegNo DESC LIMIT 1");
+		
+		//Get all data row values
+		while($row = mysqli_fetch_array($select)) {
+			$RegNoArray = strtoupper($row['RegNo']);
+		}
+		
+		//Separate each data by "-"
+		//$RegNoExp = explode("-", $RegNoArray);
+		//$RegNo = "RNEU-02T-". $RegNoExp[2] + 1;
+		
+		//Send input value to server
+		$RegNo		  = strtoupper($_POST["regno"]);
+		$SerialNo     = strtoupper($_POST["serial"]);
+		$InstruName   = strtoupper($_POST["instru"]);
+		$Tester	   	  = strtoupper($_POST["tester"]);
+		$Manufacturer = strtoupper($_POST["manu"]);
+		$Calibrator   = strtoupper($_POST["calib"]);
+		$ActualFloor  = strtoupper($_POST["floor"]);
+		$ReqPerson    = strtoupper($_POST["reqp"]);
+		$ReqDept	  = strtoupper($_POST["reqd"]);
+		$Status	  	  = strtoupper("CALIBRATED");
+		$CalDate	  = $_POST["date"]." ".$time;
+				
+		//Put all filenames into array
+		$arrayfiles = array_filter($_FILES["files"]["name"]);
+		$count = count($arrayfiles);
+					
+		$filename = $_FILES["files"]["name"];
+		$tempname = $_FILES["files"]["tmp_name"]; 
+		
+			for ($i = 0; $i < $count; $i++) {
+				$extension = strtolower(pathinfo($filename[$i] ,PATHINFO_EXTENSION));
+				$newfname = $SerialNo . "_" .date('y').date('m').date('d'). $i + 1 . "." . $extension;
+				
+				$filenames[] = $newfname;
+			}
+			
+			$files = implode(',', $filenames);
+				
+		//Insert values into database
+		$insert = ("INSERT INTO testcal_data (RegNo, SerialNo, InstruName, Tester, Manufacturer, Calibrator, Floor, ReqPerson, ReqDept, Date, Files, Status)
+					VALUES ('$RegNo', '$SerialNo', '$InstruName', '$Tester', '$Manufacturer', '$Calibrator', '$ActualFloor', '$ReqPerson', '$ReqDept', '$CalDate', '$files', '$Status')");
+		$query  = mysqli_query($con, $insert);
+		
+		$insert2 = ("INSERT INTO testcal_history (RegNo, SerialNo, InstruName, Tester, Manufacturer, Calibrator, Floor, ReqPerson, ReqDept, Date, Files, Status, Details, User)
+					VALUES ('$RegNo', '$SerialNo', '$InstruName', '$Tester', '$Manufacturer', '$Calibrator', '$ActualFloor', '$ReqPerson', '$ReqDept', '$CalDate', '$files', '$Status', 'N/A', 'N/A')");
+		$query2  = mysqli_query($con, $insert2);		
+		
+			for ($i = 0; $i < $count; $i++)
+			{
+				$extension = strtolower(pathinfo($filename[$i] ,PATHINFO_EXTENSION));
+				$newfname = $SerialNo . "_" .date('y').date('m').date('d'). $i + 1 . "." . $extension;
+				move_uploaded_file($tempname[$i], "uploads/".$newfname);
+			}
+			
+			echo "<script>
+					document.getElementById('savedMsg').style.display = 'block';
+					document.getElementById('imgAdd').style.display = 'block';
+					document.getElementById('save-btn').remove();
+					
+					window.setTimeout(function() {
+						window.location.href = 'home_login.php';							
+						}, 2000);				    
+				 </script>";			
+		
+		//Close connection
+		mysqli_close($con);		
+	}
+?>-->
+	<script type="text/javascript" src="validation.js"></script>
+	<script type="text/javascript" src="add.js"></script>
+	<script type="text/javascript" src="resetpage2.js"></script>
+
+</html>

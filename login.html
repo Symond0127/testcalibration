@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+
+    <title>LOG IN</title>
+	<!---CSS--->
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+	<!--------NAVIGATION BAR-------->
+	<nav>
+		<div class="home">
+			<div class="log">
+				<a href="home_login.html">HOME</a>
+				<img src="./images/home.png" alt="" />
+			</div>
+			<div class="add">
+				<a href="add.html">ADD DATA</a>
+				<img src="./images/add.png" alt="" />
+			</div>
+			<div class="calib">
+				<a href="register.html">REGISTER</a>
+				<img src="./images/user.png" alt="" />
+			</div>		
+		</div>
+		
+		<div class="reg">
+			<!--<a href="register.php">REGISTER</a>-->
+			<button class="login">LOGIN</button>
+		</div>
+	</nav>
+
+	<!--------LOGIN FORM-------->
+	<div class="loginpage">
+		<form action="" method="post" enctype="multipart/form-data">
+			<h2>LOGIN</h2>
+			<div class="entryfield">
+				<input type="text" name="username" id="username" required>
+				<label>Username</label>
+			</div>
+			<div class="entryfield">
+				<input type="password" name="password" id="password" required>
+				<label>Password</label>
+			</div>
+				<button type="submit" name="submit" id="login-enter">Login</button>
+				<div class="log-alarm" id="log-alarm"><p>Invalid Username or Password</p></div>
+		</form>
+	</div>	
+		<script type="text/javascript" src="home.js"></script>
+		<script type="text/javascript" src="login2.js"></script>
+</body>
+
+<!--<?php 
+	include("connection.php");
+	session_start();
+	
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	
+		$con = mysqli_connect("localhost", "root", "Yeg*490081");
+			   mysqli_select_db($con, "testcal");	
+	
+		$Username = mysqli_real_escape_string($con, $_POST["username"]);
+		$Password = mysqli_real_escape_string($con, $_POST["password"]);
+		
+		$sql   = "SELECT * FROM users WHERE Username='$Username' AND Password='$Password'";
+		$query = mysqli_query($con, $sql);
+		$rows  = mysqli_num_rows($query);
+		
+		while($data = mysqli_fetch_array($query)) {
+			$Fname = strtolower($data['FullName']);
+			$Uname = strtolower($data['Username']);
+		}
+		$name  = explode(" ", $Fname);
+		$namex = ucfirst($name[0]);
+				
+		if ($rows == 1) {
+			$_SESSION['login_user'] = $namex;
+			$_SESSION['username']   = $Uname;
+			header("location: home_login.php");
+		}
+		else {
+			echo "INVALID PASSWORD";
+		}
+	}
+?>-->
+
+</html>

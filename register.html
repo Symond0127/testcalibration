@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+
+    <title>REGISTRATION FORM</title>
+	<!---CSS--->
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+	<!--------NAVIGATION BAR-------->
+	<!--<?php 
+		include("session.php");
+	?>-->
+	<nav>
+		<div class="home">
+			<div class="log">
+				<a href="home_login.html">HOME</a>
+				<img src="./images/home.png" alt="" />
+			</div>
+			<div class="add">
+				<a href="add.html">ADD DATA</a>
+				<img src="./images/add.png" alt="" />
+			</div>
+			<div class="calib">
+				<a href="register.html">REGISTER</a>
+				<img src="./images/user.png" alt="" />
+			</div>
+			<!--<div class="regcal">
+				<a href="register.php">REGISTER</a>
+				<img src="./images/register.png" alt="" />
+			</div>-->				
+		</div>
+		
+		<div class="reg2">
+			<!--<h2>Hi <?php echo $login_session; ?> !</h2>-->
+			<button class="login">LOGIN</button>
+		</div>
+	</nav>
+
+	<!--------REGISTRATION FORM-------->
+	<div class="register">
+		<div class="reg-header">REGISTER ACCOUNT</div>
+
+		<form action="" method="post" enctype="multipart/form-data">
+			<table class="reg-table">
+				<tr>
+					<td><p>FULL NAME</p><input type="text" name="fname" id="fname" required></td>
+				</tr>
+				<tr>
+					<td><p>EMPLOYEE NUMBER</p><input type="number" name="empno" id="empno" placeholder="-- Must be a number --" required></td>
+				</tr>
+				<tr>
+					<td>
+					<div class="pass">
+						<div class="pass1"><p>PASSWORD</p></div>
+						<div class="pass2"><img src="./images/eye-close.png" alt="" id="view-pass"/></div>
+					</div>
+					<input type="password" name="password" id="password" required></td>
+				</tr>
+			</table>
+
+			<div class="reg-btn">
+				<button type="submit" name="submit" id="reg-btn">REGISTER</button>
+			</div>
+			<div class="acode" id="acodeText"><p style="color:#FF4500"></p></div>
+			<div class="regMsg" id="regMsg"><p>REGISTERED</p><img src="./images/check.png" alt="" /></div>			
+		</form>
+	</div>
+		<script type="text/javascript" src="home.js"></script>
+		<script type="text/javascript" src="pass.js"></script>
+		<script type="text/javascript" src="resetpage2.js"></script>
+</body>
+
+<!--<?php 
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	
+		$con = mysqli_connect("localhost", "root", "Yeg*490081");
+		mysqli_select_db($con, "testcal");
+		
+		$Fname 	  = $_POST["fname"];
+		$Username = $_POST["empno"];
+		$Password = $_POST["password"];
+		
+		$insert = "INSERT INTO users (FullName, Username, Password) VALUES ('$Fname', '$Username', '$Password')";
+		$query = mysqli_query($con, $insert);
+		
+		echo "<script>
+				document.getElementById('regMsg').style.visibility = 'visible';
+				document.getElementById('reg-btn').remove();
+				
+				window.setTimeout(function() {
+					window.location.href = 'home.php';							
+					}, 2000);				    
+			 </script>";
+		
+		mysqli_close($con);
+	}
+?>-->
+
+</html>
